@@ -15,9 +15,7 @@ spec:
   license:
   - name: "MIT"
     url: "https://github.com/beibing173/plugin-captcha/blob/main/LICENSE"
-  repo: "https://github.com/beibing173/plugin-captcha"
-  issues: "https://github.com/beibing173/plugin-captcha/issues"
-  website: "https://blog.zzrbk.xyz/"
+  homepage: "https://blog.zzrbk.xyz/"
   settingName: "captcha-setting"
   configMapName: "captcha-config"
   version: "1.0.0"
