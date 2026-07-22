@@ -16,6 +16,8 @@ spec:
   - name: "MIT"
     url: "https://github.com/beibing173/plugin-captcha/blob/main/LICENSE"
   homepage: "https://blog.zzrbk.xyz/"
+  repo: "https://github.com/beibing173/plugin-captcha"
+  issues: "https://github.com/beibing173/plugin-captcha/issues"
   settingName: "captcha-setting"
   configMapName: "captcha-config"
   version: "1.0.0"
