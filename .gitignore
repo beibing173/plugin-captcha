@@ -1,0 +1,9 @@
+*.pyc
+__pycache__/
+.classpath
+.project
+.settings/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db

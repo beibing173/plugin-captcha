@@ -1,0 +1,21 @@
+﻿---
+apiVersion: "plugin.halo.run/v1alpha1"
+kind: "Plugin"
+metadata:
+  name: "PluginCaptcha"
+spec:
+  enabled: true
+  requires: ">=2.20.0"
+  author:
+    name: "Beibing"
+    website: "https://github.com/halo-dev"
+  logo: "logo.png"
+  displayName: "鐧诲綍浜烘満楠岃瘉"
+  description: "鍦?Halo 鐧诲綍鍜屾敞鍐岄〉闈㈠姞鍏ヤ汉鏈洪獙璇侊紝鏀寔鏋侀獙 Geetest銆丆loudflare Turnstile銆佹湰鍦板浘褰㈤獙璇佺爜锛屾湁鏁堥槻姝㈡毚鍔涚牬瑙ｅ拰鎭舵剰鐧诲綍銆?
+  license:
+  - name: "Proprietary-NonCommercial"
+    url: "见 LICENSE 文件"
+  settingName: "captcha-setting"
+  configMapName: "captcha-config"
+  version: "1.0.0"
+

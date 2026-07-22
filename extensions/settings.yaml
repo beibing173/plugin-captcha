@@ -1,0 +1,59 @@
+apiVersion: v1alpha1
+kind: Setting
+metadata:
+  name: captcha-setting
+spec:
+  forms:
+    - group: basic
+      label: "人机验证设置"
+      formSchema:
+        - $formkit: select
+          name: provider
+          label: "验证服务商"
+          value: geetest
+          options:
+            - label: "极验 Geetest"
+              value: geetest
+            - label: "Cloudflare Turnstile"
+              value: cloudflare
+            - label: "本地图形验证码"
+              value: local
+        - $formkit: switch
+          name: enabled
+          label: "启用人机验证"
+          value: true
+        - $formkit: text
+          name: geetestId
+          label: "极验 - 验证 ID (Captcha ID)"
+          value: "ab6a4bda97165e5e51f407160a12d7a3"
+          help: "在极验后台获取"
+        - $formkit: password
+          name: geetestKey
+          label: "极验 - 验证密钥 (Captcha Key)"
+          value: "a47a669e6fb5ec88c7923f371326010f"
+          help: "在极验后台获取"
+        - $formkit: text
+          name: cloudflareSiteKey
+          label: "Cloudflare - 站点密钥 (Site Key)"
+          value: ""
+          help: "在 Cloudflare Turnstile 后台获取"
+        - $formkit: password
+          name: cloudflareSecretKey
+          label: "Cloudflare - 密钥 (Secret Key)"
+          value: ""
+          help: "在 Cloudflare Turnstile 后台获取"
+        - $formkit: number
+          name: localCaptchaLength
+          label: "本地验证码 - 字符长度"
+          value: 4
+          help: "验证码包含的字符数量，默认4位"
+        - $formkit: number
+          name: localCaptchaWidth
+          label: "本地验证码 - 图片宽度"
+          value: 130
+          help: "验证码图片宽度(像素)，默认130"
+        - $formkit: number
+          name: localCaptchaHeight
+          label: "本地验证码 - 图片高度"
+          value: 48
+          help: "验证码图片高度(像素)，默认48"
