@@ -7,3 +7,6 @@ __pycache__/
 *.iml
 .DS_Store
 Thumbs.db
+
+classes/
+stubs/
