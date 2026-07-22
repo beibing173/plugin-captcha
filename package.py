@@ -1,7 +1,7 @@
 ﻿import os, subprocess, shutil
 
 work = r"C:\Users\17367\Desktop\all\plugin-captcha-repo"
-output_jar = r"C:\Users\17367\Desktop\plugin-starter-1.9.3.jar"
+output_jar = r"C:\Users\17367\Desktop\plugin-captcha-1.9.3.jar"
 
 staging = os.path.join(work, "staging")
 if os.path.exists(staging):
@@ -44,7 +44,7 @@ with open(manifest_path, "w", encoding="utf-8", newline="\n") as f:
     f.write("Manifest-Version: 1.0\n")
     f.write("Plugin-Main-Class: run.halo.captcha.CaptchaPlugin\n")
     f.write("Build-Jdk-Spec: 21\n")
-    f.write("Implementation-Title: plugin-starter\n")
+    f.write("Implementation-Title: plugin-captcha\n")
     f.write("Implementation-Version: 2.1.7\n")
 print("  META: META-INF/MANIFEST.MF (fixed)")
 

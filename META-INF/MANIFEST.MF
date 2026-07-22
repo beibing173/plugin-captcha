@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Plugin-Main-Class: run.halo.captcha.CaptchaPlugin
 Build-Jdk-Spec: 21
-Implementation-Title: plugin-starter
+Implementation-Title: plugin-captcha
 Implementation-Version: 1.0.0

@@ -13,7 +13,7 @@
 
 ## 📦 安装
 
-1. 下载 plugin-starter-1.0.0.jar
+1. 下载 plugin-captcha-1.0.0.jar
 2. 在 Halo 后台 → 插件管理 → 上传并安装
 3. 启用插件后进入「人机验证设置」选择验证服务商
 
@@ -51,7 +51,7 @@ python package.py
 
 ## 🔗 支持
 
-- GitHub Issues: [https://github.com/halo-dev/plugin-starter/issues](https://github.com/halo-dev/plugin-starter/issues)
+- GitHub Issues: [https://github.com/halo-dev/plugin-captcha/issues](https://github.com/halo-dev/plugin-captcha/issues)
 - Halo 官方论坛: [https://bbs.halo.run](https://bbs.halo.run)
 
 ---
