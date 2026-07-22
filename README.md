@@ -1,4 +1,4 @@
-﻿# Plugin Captcha — Halo 人机验证插件
+# Plugin Captcha — Halo 人机验证插件
 
 为 Halo 博客的登录和注册页面添加人机验证，有效防止暴力破解和恶意登录。
 
@@ -13,7 +13,7 @@
 
 ## 📦 安装
 
-1. 下载 plugin-captcha-1.0.0.jar
+1. 下载 plugin-captcha-x.x.x.jar
 2. 在 Halo 后台 → 插件管理 → 上传并安装
 3. 启用插件后进入「人机验证设置」选择验证服务商
 
@@ -28,27 +28,6 @@
 | 验证码长度 | 本地验证码字符数（默认 4） |
 | 图片宽度 / 高度 | 本地验证码尺寸（默认 130×48） |
 
-## 📸 截图
-
-> 将截图放入 screenshots/ 目录：
-> - screenshots/login-local.png — 登录页本地验证码
-> - screenshots/register-local.png — 注册页本地验证码
-> - screenshots/settings.png — 后台设置页
-
-## 🛠️ 开发构建
-
-`ash
-# 编译
-python compile.py
-
-# 打包 JAR
-python package.py
-`
-
-## 📄 许可证
-
-禁止商用 · 见 [LICENSE](LICENSE) © Beibing
-
 ## 🔗 支持
 
 - GitHub Issues: [https://github.com/halo-dev/plugin-captcha/issues](https://github.com/halo-dev/plugin-captcha/issues)
@@ -56,5 +35,4 @@ python package.py
 
 ---
 
-**版本**: 1.0.0 | **要求**: Halo ≥ 2.20.0
-
+**要求**: Halo ≥ 2.20.0
