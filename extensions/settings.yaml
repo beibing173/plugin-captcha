@@ -25,12 +25,12 @@ spec:
         - $formkit: text
           name: geetestId
           label: "极验 - 验证 ID (Captcha ID)"
-          value: "ab6a4bda97165e5e51f407160a12d7a3"
+          value: ""
           help: "在极验后台获取"
         - $formkit: password
           name: geetestKey
           label: "极验 - 验证密钥 (Captcha Key)"
-          value: "a47a669e6fb5ec88c7923f371326010f"
+          value: ""
           help: "在极验后台获取"
         - $formkit: text
           name: cloudflareSiteKey
