@@ -1,4 +1,4 @@
-package run.halo.captcha;
+package site.zzrbk.plugin.captcha;
 
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;

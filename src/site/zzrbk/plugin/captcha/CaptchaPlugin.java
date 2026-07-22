@@ -1,4 +1,4 @@
-package run.halo.captcha;
+package site.zzrbk.plugin.captcha;
 
 import run.halo.app.plugin.BasePlugin;
 import run.halo.app.plugin.PluginContext;

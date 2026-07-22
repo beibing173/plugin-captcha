@@ -1,10 +1,10 @@
-package run.halo.captcha;
+package site.zzrbk.plugin.captcha;
 
 public class CaptchaSetting {
 
     public static final String GROUP = "basic";
 
-    private String provider = "geetest";
+    private String provider = "local";
     private Boolean enabled = true;
     private String geetestId = "";
     private String geetestKey = "";

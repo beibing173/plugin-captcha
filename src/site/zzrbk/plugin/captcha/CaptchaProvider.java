@@ -1,4 +1,4 @@
-package run.halo.captcha;
+package site.zzrbk.plugin.captcha;
 
 public enum CaptchaProvider {
     CLOUDFLARE,

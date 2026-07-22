@@ -1,4 +1,4 @@
-package run.halo.captcha;
+package site.zzrbk.plugin.captcha;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,9 +23,12 @@ import run.halo.app.security.AdditionalWebFilter;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CaptchaWebFilter implements AdditionalWebFilter {
 
@@ -36,13 +39,19 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
     private final List<CaptchaVerifier> verifiers;
     private final CaptchaCodeStore codeStore;
 
+    // Rate limiting for captcha image: max requests per window
+    private static final int MAX_IMAGE_PER_WINDOW = 60;
+    private static final Duration RATE_WINDOW = Duration.ofMinutes(1);
+    private final ConcurrentHashMap<String, AtomicInteger> imageRateMap = new ConcurrentHashMap<>();
+    private Instant rateWindowStart = Instant.now();
+
     public CaptchaWebFilter(ReactiveSettingFetcher settingFetcher,
                             List<CaptchaVerifier> verifiers,
                             CaptchaCodeStore codeStore) {
         this.settingFetcher = settingFetcher;
         this.verifiers = verifiers;
         this.codeStore = codeStore;
-        log.info("PluginCaptcha v2.0.3 filter loaded, verifiers={}", verifiers.size());
+        log.info("PluginCaptcha v1.0.0 filter loaded, verifiers={}", verifiers.size());
     }
 
     @Override
@@ -53,6 +62,15 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
     private static boolean isCaptchaPage(String path) {
         return "/login".equals(path) || "/registration".equals(path)
                 || "/register".equals(path) || "/signup".equals(path);
+    }
+
+    private synchronized boolean checkImageRate(String clientIp) {
+        if (Duration.between(rateWindowStart, Instant.now()).compareTo(RATE_WINDOW) > 0) {
+            imageRateMap.clear();
+            rateWindowStart = Instant.now();
+        }
+        AtomicInteger count = imageRateMap.computeIfAbsent(clientIp, k -> new AtomicInteger(0));
+        return count.incrementAndGet() <= MAX_IMAGE_PER_WINDOW;
     }
 
     @Override
@@ -77,17 +95,33 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
                                 });
                     })
                     .onErrorResume(e -> {
-                        log.error("Captcha POST error: {}", e.getMessage());
-                        return chain.filter(exchange);
+                        log.error("Captcha POST error - rejecting: {}", e.getMessage());
+                        return reject(exchange, path);
                     });
         }
 
         if (method == HttpMethod.GET) {
-            if (path.contains("captcha_image")) {
+            if ("/captcha_image".equals(path)) {
                 return settingFetcher.fetch("basic", CaptchaSetting.class)
                         .timeout(Duration.ofSeconds(3))
                         .defaultIfEmpty(new CaptchaSetting())
-                        .flatMap(setting -> serveCaptchaImage(exchange, setting));
+                        .flatMap(setting -> {
+                            if (!Boolean.TRUE.equals(setting.getEnabled())
+                                    || setting.getProviderEnum() != CaptchaProvider.LOCAL) {
+                                return rejectImage(exchange);
+                            }
+                            String ip = exchange.getRequest().getRemoteAddress() != null
+                                    ? exchange.getRequest().getRemoteAddress().getAddress().getHostAddress()
+                                    : "unknown";
+                            if (!checkImageRate(ip)) {
+                                return rejectImage(exchange);
+                            }
+                            return serveCaptchaImage(exchange, setting);
+                        })
+                        .onErrorResume(e -> {
+                            log.error("Captcha image error: {}", e.getMessage());
+                            return rejectImage(exchange);
+                        });
             }
 
             if (isCaptchaPage(path)) {
@@ -101,8 +135,8 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
                             return injectCaptcha(exchange, chain, setting);
                         })
                         .onErrorResume(e -> {
-                            log.error("Captcha GET error: {}", e.getMessage());
-                            return chain.filter(exchange);
+                            log.error("Captcha GET error - rejecting: {}", e.getMessage());
+                            return reject(exchange, path);
                         });
             }
         }
@@ -115,9 +149,15 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
         int width = setting.getLocalCaptchaWidth() != null ? setting.getLocalCaptchaWidth() : 130;
         int height = setting.getLocalCaptchaHeight() != null ? setting.getLocalCaptchaHeight() : 48;
 
+        if (length < 1 || length > 10) length = 4;
+        if (width < 40 || width > 600) width = 130;
+        if (height < 20 || height > 300) height = 48;
+
         String code = codeStore.generateCode(length);
         String token = CaptchaCodeStore.generateToken();
-        codeStore.store(token, code);
+        if (!codeStore.store(token, code)) {
+            return rejectImage(exchange);
+        }
 
         byte[] imageBytes = codeStore.generateImage(code, width, height);
 
@@ -137,16 +177,18 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
         return response.writeWith(Mono.just(response.bufferFactory().wrap(imageBytes)));
     }
 
+    private Mono<Void> rejectImage(ServerWebExchange exchange) {
+        ServerHttpResponse response = exchange.getResponse();
+        response.setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
+        return response.setComplete();
+    }
+
     private Mono<Void> injectCaptcha(ServerWebExchange exchange, WebFilterChain chain,
                                      CaptchaSetting setting) {
         String configJson = buildConfigJson(setting);
         String captchaJsInline = getCaptchaJs();
         String injection = "<script>window.__captchaConfig=" + configJson
                 + ";</script><script>" + captchaJsInline + "</script>";
-
-        String pagePath = exchange.getRequest().getURI().getPath();
-        log.info("Captcha injecting for {}: provider={}, enabled={}",
-                pagePath, setting.getProvider(), setting.getEnabled());
 
         ServerHttpResponse originalResponse = exchange.getResponse();
         ServerHttpResponse decoratedResponse =
@@ -216,7 +258,7 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
                 .filter(v -> v.supports(provider))
                 .findFirst()
                 .map(v -> v.verify(exchange, setting))
-                .orElse(Mono.just(true));
+                .orElse(Mono.just(false));
     }
 
     private String buildConfigJson(CaptchaSetting setting) {

@@ -1,4 +1,4 @@
-package run.halo.captcha;
+package site.zzrbk.plugin.captcha;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 public class CaptchaCodeStore {
 
     private static final SecureRandom RANDOM = new SecureRandom();
+    private static final int MAX_CAPACITY = 10000;
     private static final String CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     private static final ScheduledExecutorService CLEANER =
             Executors.newSingleThreadScheduledExecutor(r -> {
@@ -50,8 +51,12 @@ public class CaptchaCodeStore {
         return sb.toString();
     }
 
-    public void store(String token, String code) {
+    public boolean store(String token, String code) {
+        if (store.size() >= MAX_CAPACITY) {
+            return false;
+        }
         store.put(token, new CodeEntry(code, System.currentTimeMillis()));
+        return true;
     }
 
     public String getAndRemove(String token) {

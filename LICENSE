@@ -1,17 +1,21 @@
-﻿本项目许可证
+MIT License
 
-版权所有 (C) 2024 Beibing
+Copyright (c) 2024 Beibing
 
-本软件及其相关文档文件（以下简称"软件"）仅供个人和非商业用途免费使用。
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-未经作者明确书面许可，任何人不得：
-- 将本软件或其任何部分用于商业目的
-- 以任何形式出售、出租、转授权本软件
-- 将本软件作为商业产品或服务的一部分进行分发
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-本软件按"原样"提供，不提供任何形式的明示或暗示担保。
-作者不对因使用本软件而产生的任何损害承担责任。
-
-免责声明：
-本软件为开源且免费提供。若您通过付费渠道获取本软件，您已被欺诈，
-请立即申请退款并向作者举报。
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

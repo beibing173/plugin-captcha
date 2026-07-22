@@ -1,4 +1,4 @@
-﻿---
+---
 apiVersion: "plugin.halo.run/v1alpha1"
 kind: "Plugin"
 metadata:
@@ -8,14 +8,13 @@ spec:
   requires: ">=2.20.0"
   author:
     name: "Beibing"
-    website: "https://github.com/halo-dev"
+    website: "https://github.com/beibing173/plugin-captcha"
   logo: "logo.png"
-  displayName: "鐧诲綍浜烘満楠岃瘉"
-  description: "鍦?Halo 鐧诲綍鍜屾敞鍐岄〉闈㈠姞鍏ヤ汉鏈洪獙璇侊紝鏀寔鏋侀獙 Geetest銆丆loudflare Turnstile銆佹湰鍦板浘褰㈤獙璇佺爜锛屾湁鏁堥槻姝㈡毚鍔涚牬瑙ｅ拰鎭舵剰鐧诲綍銆?
+  displayName: "人机验证"
+  description: "为 Halo 登录和注册页面加入人机验证，支持极验 Geetest、Cloudflare Turnstile、本地图形验证码，有效防止暴力破解和恶意登录。"
   license:
-  - name: "Proprietary-NonCommercial"
-    url: "见 LICENSE 文件"
+  - name: "MIT"
+    url: "https://github.com/beibing173/plugin-captcha/blob/main/LICENSE"
   settingName: "captcha-setting"
   configMapName: "captcha-config"
   version: "1.0.0"
-
