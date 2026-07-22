@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Semaphore;
 
 public class CaptchaWebFilter implements AdditionalWebFilter {
 
@@ -43,6 +44,7 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
     private static final int MAX_IMAGE_PER_WINDOW = 60;
     private static final Duration RATE_WINDOW = Duration.ofMinutes(1);
     private final ConcurrentHashMap<String, AtomicInteger> imageRateMap = new ConcurrentHashMap<>();
+    private final Semaphore imageConcurrencyLimit = new Semaphore(10);
     private Instant rateWindowStart = Instant.now();
 
     public CaptchaWebFilter(ReactiveSettingFetcher settingFetcher,
@@ -116,7 +118,11 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
                             if (!checkImageRate(ip)) {
                                 return rejectImage(exchange);
                             }
-                            return serveCaptchaImage(exchange, setting);
+                            if (!imageConcurrencyLimit.tryAcquire()) {
+                                return rejectImage(exchange);
+                            }
+                            return serveCaptchaImage(exchange, setting)
+                                    .doFinally(s -> imageConcurrencyLimit.release());
                         })
                         .onErrorResume(e -> {
                             log.error("Captcha image error: {}", e.getMessage());
