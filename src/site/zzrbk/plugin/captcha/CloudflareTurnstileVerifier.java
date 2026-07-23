@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
+import java.time.Duration;
 import reactor.core.publisher.Mono;
 
 public class CloudflareTurnstileVerifier implements CaptchaVerifier {
@@ -45,7 +46,8 @@ public class CloudflareTurnstileVerifier implements CaptchaVerifier {
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .bodyValue(body)
                 .retrieve()
-                .bodyToMono(String.class)
+.bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(10))
                 .map(this::parseResponse)
                 .onErrorResume(e -> {
                     log.error("Cloudflare Turnstile verify error", e);

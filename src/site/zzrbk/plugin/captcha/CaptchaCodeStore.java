@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 
@@ -27,10 +28,13 @@ public class CaptchaCodeStore {
                 return t;
             });
 
+    
+    private ScheduledFuture<?> cleanupFuture;
+
     private final ConcurrentMap<String, CodeEntry> store = new ConcurrentHashMap<>();
 
     public CaptchaCodeStore() {
-        CLEANER.scheduleAtFixedRate(this::cleanExpired, 60, 60, TimeUnit.SECONDS);
+        this.cleanupFuture = CLEANER.scheduleAtFixedRate(this::cleanExpired, 60, 60, TimeUnit.SECONDS);
     }
 
     public static String generateToken() {
@@ -136,6 +140,21 @@ public class CaptchaCodeStore {
         }
     }
 
+
+    public void destroy() {
+        if (cleanupFuture != null) {
+            cleanupFuture.cancel(false);
+        }
+        CLEANER.shutdown();
+        try {
+            if (!CLEANER.awaitTermination(5, TimeUnit.SECONDS)) {
+                CLEANER.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            CLEANER.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+    }
     private void cleanExpired() {
         long now = System.currentTimeMillis();
         store.entrySet().removeIf(e -> now - e.getValue().createdAt > Duration.ofMinutes(5).toMillis());
