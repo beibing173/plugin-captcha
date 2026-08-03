@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilterChain;
 import org.reactivestreams.Publisher;
@@ -31,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.Semaphore;
 
+@Component
 public class CaptchaWebFilter implements AdditionalWebFilter {
 
     private static final Logger log = LoggerFactory.getLogger(CaptchaWebFilter.class);
@@ -58,7 +60,7 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
 
     @Override
     public int getOrder() {
-        return Ordered.LOWEST_PRECEDENCE + 10;
+        return Ordered.LOWEST_PRECEDENCE - 10;
     }
 
     private static boolean isCaptchaPage(String path) {

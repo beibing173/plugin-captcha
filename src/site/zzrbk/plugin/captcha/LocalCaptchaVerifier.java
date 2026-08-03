@@ -2,9 +2,11 @@ package site.zzrbk.plugin.captcha;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+@Component
 public class LocalCaptchaVerifier implements CaptchaVerifier {
 
     private static final Logger log = LoggerFactory.getLogger(LocalCaptchaVerifier.class);

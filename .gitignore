@@ -10,3 +10,7 @@ Thumbs.db
 
 classes/
 stubs/
+staging/
+verify_tmp/
+.m2repo/
+target/

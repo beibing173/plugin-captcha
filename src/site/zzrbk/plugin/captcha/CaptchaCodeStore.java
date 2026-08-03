@@ -15,13 +15,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
+import jakarta.annotation.PreDestroy;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CaptchaCodeStore {
 
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final int MAX_CAPACITY = 10000;
     private static final String CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    private static final ScheduledExecutorService CLEANER =
+    private final ScheduledExecutorService cleaner =
             Executors.newSingleThreadScheduledExecutor(r -> {
                 Thread t = new Thread(r, "captcha-cleaner");
                 t.setDaemon(true);
@@ -34,7 +37,7 @@ public class CaptchaCodeStore {
     private final ConcurrentMap<String, CodeEntry> store = new ConcurrentHashMap<>();
 
     public CaptchaCodeStore() {
-        this.cleanupFuture = CLEANER.scheduleAtFixedRate(this::cleanExpired, 60, 60, TimeUnit.SECONDS);
+        this.cleanupFuture = cleaner.scheduleAtFixedRate(this::cleanExpired, 60, 60, TimeUnit.SECONDS);
     }
 
     public static String generateToken() {
@@ -141,17 +144,18 @@ public class CaptchaCodeStore {
     }
 
 
+    @PreDestroy
     public void destroy() {
         if (cleanupFuture != null) {
             cleanupFuture.cancel(false);
         }
-        CLEANER.shutdown();
+        cleaner.shutdown();
         try {
-            if (!CLEANER.awaitTermination(5, TimeUnit.SECONDS)) {
-                CLEANER.shutdownNow();
+            if (!cleaner.awaitTermination(5, TimeUnit.SECONDS)) {
+                cleaner.shutdownNow();
             }
         } catch (InterruptedException e) {
-            CLEANER.shutdownNow();
+            cleaner.shutdownNow();
             Thread.currentThread().interrupt();
         }
     }
