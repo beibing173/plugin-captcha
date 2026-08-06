@@ -35,9 +35,6 @@ public class GeetestVerifier implements CaptchaVerifier {
             String passToken = formData.getFirst("pass_token");
             String genTime = formData.getFirst("gen_time");
 
-            log.info("Geetest verify: lot={} captcha_output={} pass_token={} gen_time={}",
-                    lotNumber, captchaOutput, passToken, genTime);
-
             if (lotNumber == null || captchaOutput == null || passToken == null || genTime == null) {
                 log.warn("Geetest: missing form fields");
                 return Mono.just(false);
@@ -53,7 +50,6 @@ public class GeetestVerifier implements CaptchaVerifier {
             }
 
             String signToken = hmacSha256(lotNumber, captchaKey);
-            log.info("Geetest sign_token={}", signToken);
 
             String url = "https://gcaptcha4.geetest.com/validate?captcha_id=" + enc(captchaId);
             String body = "lot_number=" + enc(lotNumber)
@@ -79,14 +75,13 @@ public class GeetestVerifier implements CaptchaVerifier {
         });
     }
 
-    private Boolean parseResponse(String body) {
-        log.info("Geetest API resp: {}", body);
+    Boolean parseResponse(String body) {
         try {
             JsonNode node = objectMapper.readTree(body);
             String result = node.path("result").asText("");
-            String reason = node.path("reason").asText("");
-            log.info("Geetest result={} reason={}", result, reason);
-            return "success".equals(result);
+            boolean success = "success".equals(result);
+            log.debug("Geetest verification completed: success={}", success);
+            return success;
         } catch (Exception e) {
             log.error("Geetest parse error", e);
             return false;

@@ -153,11 +153,10 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
     }
 
     private Mono<Void> serveCaptchaImage(ServerWebExchange exchange, CaptchaSetting setting) {
-        int length = setting.getLocalCaptchaLength() != null ? setting.getLocalCaptchaLength() : 4;
+        int length = setting.getValidatedLocalCaptchaLength();
         int width = setting.getLocalCaptchaWidth() != null ? setting.getLocalCaptchaWidth() : 130;
         int height = setting.getLocalCaptchaHeight() != null ? setting.getLocalCaptchaHeight() : 48;
 
-        if (length < 1 || length > 10) length = 4;
         if (width < 40 || width > 600) width = 130;
         if (height < 20 || height > 300) height = 48;
 
@@ -277,6 +276,7 @@ public class CaptchaWebFilter implements AdditionalWebFilter {
             config.put("geetestId", setting.getGeetestId());
             config.put("cloudflareSiteKey", setting.getCloudflareSiteKey());
             config.put("captchaImageUrl", "/captcha_image");
+            config.put("localCaptchaLength", setting.getValidatedLocalCaptchaLength());
             return OBJECT_MAPPER.writeValueAsString(config);
         } catch (JsonProcessingException e) {
             return "{}";

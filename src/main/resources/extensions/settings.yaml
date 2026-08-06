@@ -43,11 +43,6 @@ spec:
           value: ""
           help: "在 Cloudflare Turnstile 后台获取"
         - $formkit: number
-          name: localCaptchaLength
-          label: "本地验证码 - 字符长度"
-          value: 4
-          help: "验证码包含的字符数量，默认 4 位"
-        - $formkit: number
           name: localCaptchaWidth
           label: "本地验证码 - 图片宽度"
           value: 130

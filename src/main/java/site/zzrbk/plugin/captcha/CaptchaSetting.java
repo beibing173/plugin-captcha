@@ -3,6 +3,7 @@ package site.zzrbk.plugin.captcha;
 public class CaptchaSetting {
 
     public static final String GROUP = "basic";
+    public static final int LOCAL_CAPTCHA_LENGTH = 6;
 
     private String provider = "local";
     private Boolean enabled = true;
@@ -10,7 +11,7 @@ public class CaptchaSetting {
     private String geetestKey = "";
     private String cloudflareSiteKey = "";
     private String cloudflareSecretKey = "";
-    private Integer localCaptchaLength = 4;
+    private Integer localCaptchaLength = LOCAL_CAPTCHA_LENGTH;
     private Integer localCaptchaWidth = 130;
     private Integer localCaptchaHeight = 48;
 
@@ -34,6 +35,10 @@ public class CaptchaSetting {
 
     public Integer getLocalCaptchaLength() { return localCaptchaLength; }
     public void setLocalCaptchaLength(Integer localCaptchaLength) { this.localCaptchaLength = localCaptchaLength; }
+
+    public int getValidatedLocalCaptchaLength() {
+        return LOCAL_CAPTCHA_LENGTH;
+    }
 
     public Integer getLocalCaptchaWidth() { return localCaptchaWidth; }
     public void setLocalCaptchaWidth(Integer localCaptchaWidth) { this.localCaptchaWidth = localCaptchaWidth; }

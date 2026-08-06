@@ -74,7 +74,8 @@
         img.title='点击刷新验证码';
         var input=document.createElement('input');
         input.type='text';input.name='captcha_code';
-        input.placeholder='请输入验证码';input.maxLength=6;
+        var codeLength=config.localCaptchaLength||6;
+        input.placeholder='请输入验证码';input.maxLength=codeLength;input.minLength=codeLength;
         input.style.cssText='height:44px;width:120px;padding:0 10px;border:1px solid #d9d9d9;border-radius:4px;font-size:15px;letter-spacing:3px;text-align:center;outline:none;';
         input.onfocus=function(){this.style.borderColor='#4e8bf5';};
         input.onblur=function(){this.style.borderColor='#d9d9d9';};
@@ -121,7 +122,8 @@
         }
         if(config.provider==='local'){
             var el=form.querySelector('input[name=\"captcha_code\"]');
-            return !!(el&&el.value.trim());
+            var expectedLength=config.localCaptchaLength||6;
+            return !!(el&&el.value.trim().length===expectedLength);
         }
         return true;
     }

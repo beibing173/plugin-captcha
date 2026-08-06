@@ -40,12 +40,12 @@ public class LocalCaptchaVerifier implements CaptchaVerifier {
 
             String storedCode = codeStore.getAndRemove(token);
             if (storedCode == null) {
-                log.warn("Local captcha: no stored code for token {}", token);
+                log.warn("Local captcha: no stored code for request token");
                 return Mono.just(false);
             }
 
             boolean valid = storedCode.equalsIgnoreCase(userCode.trim());
-            log.info("Local captcha verification: {} for token {}", valid, token);
+            log.debug("Local captcha verification completed: success={}", valid);
             return Mono.just(valid);
         });
     }

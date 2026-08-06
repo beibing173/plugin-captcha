@@ -14,3 +14,5 @@ staging/
 verify_tmp/
 .m2repo/
 target/
+.gradle/
+build/

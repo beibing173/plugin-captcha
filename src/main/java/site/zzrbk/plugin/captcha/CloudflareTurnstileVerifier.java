@@ -61,7 +61,7 @@ public class CloudflareTurnstileVerifier implements CaptchaVerifier {
         try {
             JsonNode node = objectMapper.readTree(body);
             boolean success = node.path("success").asBoolean(false);
-            log.info("Cloudflare Turnstile result: success={}", success);
+            log.debug("Cloudflare Turnstile verification completed: success={}", success);
             return success;
         } catch (Exception e) {
             log.error("Cloudflare Turnstile parse error", e);
